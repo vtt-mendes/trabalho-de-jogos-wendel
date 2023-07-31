@@ -202,9 +202,9 @@ TextureImporter:
       name: gold_3
       rect:
         serializedVersion: 2
-        x: 55
+        x: 56
         y: 0
-        width: 7
+        width: 6
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -223,9 +223,9 @@ TextureImporter:
       name: gold_4
       rect:
         serializedVersion: 2
-        x: 73
+        x: 74
         y: 0
-        width: 7
+        width: 4
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -244,9 +244,9 @@ TextureImporter:
       name: gold_5
       rect:
         serializedVersion: 2
-        x: 89
+        x: 90
         y: 0
-        width: 8
+        width: 6
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -286,9 +286,9 @@ TextureImporter:
       name: gold_7
       rect:
         serializedVersion: 2
-        x: 119
+        x: 120
         y: 0
-        width: 15
+        width: 14
         height: 16
       alignment: 0
       pivot: {x: 0, y: 0}

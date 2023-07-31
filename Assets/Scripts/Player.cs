@@ -4,28 +4,42 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-  
+   public int health = 3;
    public float speed;
    public float jumpForce;
-   private bool isJumping;
-   private bool doubleJump;
-   private bool isFire;
 
    public GameObject tiro;
    public Transform firePoint;
 
+   private bool isJumping;
+   private bool doubleJump;
+   private bool isFire;
+
    private Rigidbody2D rig;
    private Animator anim;
 
-   private float movement;
+   public float movement;
+   public bool isMobile;
+
+   public bool touchJump;
+   public bool touchFire;
+
+    // posição inicial
+   public Vector3 posInicial;
+
 
     // Start is called before the first frame update
     void Start()
     {
        rig = GetComponent<Rigidbody2D>();
        anim = GetComponent<Animator>();
-    }
 
+       GameController.instance.UpdateLives(health);
+
+       posInicial = new Vector3(-23.81f, -0.6f, 0);
+       transform.position = posInicial;
+    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -40,8 +54,13 @@ public class Player : MonoBehaviour
 
     void Move()
     {
-       //se nao pressionar nada valor é 0. Pressinar direita, valor maximo 1. Esquerda valor maximo -1 
+
+        if(!isMobile) 
+        {
+//se nao pressionar nada valor é 0. Pressinar direita, valor maximo 1. Esquerda valor maximo -1 
         movement = Input.GetAxis("Horizontal");
+        }
+       
 
         //adiciona velocidade ao corpo do personagem no eixo x e y
         rig.velocity = new Vector2(movement * speed, rig.velocity.y);
@@ -75,7 +94,7 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-       if(Input.GetButtonDown("Jump"))
+       if(Input.GetButtonDown("Jump") || touchJump)
        {
         if(!isJumping)
         {
@@ -94,6 +113,8 @@ public class Player : MonoBehaviour
                 doubleJump = false;
             }
         }
+
+        touchJump = false;
        }
     }
 
@@ -104,8 +125,10 @@ public class Player : MonoBehaviour
 
     IEnumerator Fire()
     {
-        if(Input.GetKeyDown(KeyCode.E))
+        if(Input.GetKeyDown(KeyCode.E) || touchFire)
         {
+            touchFire = false;
+
             isFire = true;
             anim.SetInteger("transition", 3);
             GameObject Tiro = Instantiate(tiro, firePoint.position, firePoint.rotation);
@@ -127,11 +150,57 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Damege(int dmg)
+    {
+        health -= dmg;
+        GameController.instance.UpdateLives(health);
+        
+            if(transform.rotation.y == 0)
+            {
+                transform.position += new Vector3(-0.5f,0,0);
+            }
+
+            if(transform.rotation.y == 180)
+            {
+                transform.position += new Vector3(0.5f,0,0);
+            }
+
+        if(health <= 0)
+        {
+            //chamar game over
+            GameController.instance.GameOver();
+
+        }
+
+    }
+
+    public void IncreaseLife(int value)
+    {
+        health += value;
+        GameController.instance.UpdateLives(health);
+    }
+
     void OnCollisionEnter2D(Collision2D coll)
     {
         if(coll.gameObject.layer == 6 )
         {
             isJumping = false;
+        }
+
+       
+    }
+
+    void OnTriggerEnter2D(Collider2D coll)
+    {
+        if(coll.gameObject.tag == "checkpoint")
+        {
+            posInicial = coll.gameObject.transform.position;
+            Destroy(coll.gameObject);
+        }
+
+        if(coll.gameObject.tag == "FallDetector")
+        {
+            transform.position = posInicial;
         }
     }
 }

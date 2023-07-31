@@ -7,8 +7,10 @@ public class Enemy : MonoBehaviour
     public float speed;
     public float walkTime;
     private bool walkRight = true;
-    private float timer;
 
+    public int damage = 1;
+
+    private float timer;
 
     private Animator anim;
     private Rigidbody2D rig;
@@ -53,4 +55,13 @@ public class Enemy : MonoBehaviour
         speed = 0f;
         Destroy(gameObject, 1f);
     }
+
+   private void OnCollisionEnter2D(Collision2D collision)
+   {
+      if(collision.gameObject.tag == "Player")
+      {
+          collision.gameObject.GetComponent<Player>().Damege(damage);
+      }
+   }
+
 }
